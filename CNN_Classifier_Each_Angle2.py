@@ -23,8 +23,8 @@ def unique(list1):
     return unique_list
 
 result = np.zeros((11, 11))
-# angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-angles_gallery = ['090']
+angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+# angles_gallery = ['090']
 # angles_probe = angles_gallery
 # angles_probe = ['090']
 path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/200000/imgs/'
@@ -87,8 +87,8 @@ for g_ang in angles_gallery:
     x_train /= 255
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=True)
 
-    # angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-    angles_probe = ['090']
+    angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+    #angles_probe = ['090']
                
     for p_ang in angles_probe:
         path2 = path1 + g_ang + '/'   
