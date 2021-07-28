@@ -12,14 +12,17 @@ def unique(list1):
             unique_list.append(x)
     return unique_list
 
-def finalClass(cl,pb,posesNumber):
+def finalClass(cl2,pb2,posesNumber):
     sum_prob = [];
-    unique_cl = unique(cl)
+    # print(cl2)
+    # print("cl2:",cl2)
+    # print("pb2:",pb2)
+    unique_cl = unique(cl2)
     for number2 in range(0,len(unique_cl)):
         prob = 0
         for number3 in range(0,posesNumber):
-            if unique_cl[number2]==cl[number3]:
-                prob = prob + pb[number3]
+            if unique_cl[number2]==cl2[number3]:
+                prob = prob + pb2[number3]
         sum_prob.append(prob)
     maxval = np.amax(sum_prob)
     index = -1
@@ -32,11 +35,11 @@ def finalClass(cl,pb,posesNumber):
 
 
 result = np.zeros((11, 11))
-rank = 20
-angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-#angles_gallery = ['090']
+rank = 10
+# angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+angles_gallery = ['090']
 angles_probe = angles_gallery
-path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/20181221/imgs/'
+path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/200000/imgs/'
 ix = 0
 iy = 0
 for g_ang in angles_gallery:
@@ -47,7 +50,7 @@ for g_ang in angles_gallery:
     print(subjectsNumber)
     X = []
     y = []
-    pid = 62
+    pid = 0
     for number1 in range(pid,subjectsNumber):
         path3 = path2 + subjects[number1] + '/'
         for sequence in ['nm-01', 'nm-02', 'nm-03', 'nm-04']:
@@ -56,7 +59,7 @@ for g_ang in angles_gallery:
             posesNumber = len(poses)            
             for number2 in range(0,posesNumber):
                 path5 = path4 + poses[number2]
-                # print(path5)
+                # print("image path: ",path5)
                 img = cv2.imread(path5, 0)
                 img = img.flatten().astype(np.float32)
                 X.append(img) 
@@ -76,13 +79,13 @@ for g_ang in angles_gallery:
     lda_model.fit(X, y)
     X = lda_model.transform(X)
     
-    nbrs = KNeighborsClassifier(n_neighbors=1, p=2, weights='distance', metric='euclidean')
+    nbrs = KNeighborsClassifier(n_neighbors=rank*2, weights='distance', metric='euclidean')
     nbrs.fit(X, y)
     print('train : ', X.shape)
 
     
-    angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-    # angles_probe = ['072', '090', '108',]
+    # angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+    angles_probe = ['090']
     for p_ang in angles_probe:
         path2 = path1 + g_ang + '/'
         # print(path2)
@@ -92,7 +95,7 @@ for g_ang in angles_gallery:
         
         testy = []
         predy = []
-        for number1 in range(pid,subjectsNumber):
+        for number1 in range(pid,subjectsNumber):#
             path3 = path2 + subjects[number1] + '/'
             # print(path3)
             for sequence in ['nm-05', 'nm-06']:
@@ -114,16 +117,23 @@ for g_ang in angles_gallery:
                 tX = pca_model.transform(testX)
                 tX = lda_model.transform(tX)
                 pred = nbrs.predict_proba(tX)
+                # n_points = kneighbors([X, 20, return_distance])
+                # print("pred: ", pred)
+                # print("pred.shape: ", pred.shape)
                 for number2 in range(0,posesNumber):
-                    temp = sorted(pred[number2])
+                    temp = sorted(pred[number2],reverse=True)
+                    # print("temp: ", temp)
                     cl1 = []
                     pb1 = []
                     for number21 in range(0,rank):
-                        index = np.where(pred[number2] == temp[number21])
-                        cl1.append(index[0]+pid+1)                        
+                        index = np.where(pred[number2] == temp[number21])                        
+                        index = np.asarray(index)                        
+                        cl1.append(index[0][0]+pid+1)
                         pb1.append(temp[number21])                        
                     cl.append(cl1)
+                    # print("cl1: ",cl1)
                     pb.append(pb1)
+                    # print("pb1: ",pb1)
 
                 predy1 = []
                 for number21 in range(0,rank):
@@ -131,10 +141,15 @@ for g_ang in angles_gallery:
                     pb1 = []
                     for number2 in range(0,posesNumber):
                         cl1.append(cl[number2][number21])
-                        pb1.append(pb[number21][number2])
+                        # print("cl[number21][number2]: ",cl[number21][number2])
+                        pb1.append(pb[number2][number21])
+                        # print("pb[number21][number2]: ",pb[number21][number2])
+                    # print("cl1:",cl1)
+                    # print("pb1:",pb1)
                     tcl = finalClass(cl1,pb1,posesNumber)
+                    # print("tcl:",tcl)
                     predy1.append(tcl)
-  
+                    print("predy1:",predy1)
                 predy.append(predy1)  
 
         count1 = 0
