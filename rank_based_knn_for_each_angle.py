@@ -33,8 +33,8 @@ def finalClass(cl2,pb2,posesNumber):
 
 result = np.zeros((11, 11))
 rank = 20
-# angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-angles_gallery = ['072']
+angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+#angles_gallery = ['072']
 angles_probe = angles_gallery
 path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/200000/imgs/'
 ix = 0
@@ -81,8 +81,8 @@ for g_ang in angles_gallery:
     print('train : ', X.shape)
 
     
-    # angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-    angles_probe = ['090']
+    angles_probe = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
+    #angles_probe = ['090']
     for p_ang in angles_probe:
         path2 = path1 + g_ang + '/'
         # print(path2)
