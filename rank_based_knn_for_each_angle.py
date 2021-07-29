@@ -14,9 +14,6 @@ def unique(list1):
 
 def finalClass(cl2,pb2,posesNumber):
     sum_prob = [];
-    # print(cl2)
-    # print("cl2:",cl2)
-    # print("pb2:",pb2)
     unique_cl = unique(cl2)
     for number2 in range(0,len(unique_cl)):
         prob = 0
@@ -35,9 +32,9 @@ def finalClass(cl2,pb2,posesNumber):
 
 
 result = np.zeros((11, 11))
-rank = 10
+rank = 20
 # angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
-angles_gallery = ['090']
+angles_gallery = ['072']
 angles_probe = angles_gallery
 path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/200000/imgs/'
 ix = 0
@@ -117,9 +114,7 @@ for g_ang in angles_gallery:
                 tX = pca_model.transform(testX)
                 tX = lda_model.transform(tX)
                 pred = nbrs.predict_proba(tX)
-                # n_points = kneighbors([X, 20, return_distance])
-                # print("pred: ", pred)
-                # print("pred.shape: ", pred.shape)
+                
                 for number2 in range(0,posesNumber):
                     temp = sorted(pred[number2],reverse=True)
                     # print("temp: ", temp)
@@ -143,29 +138,35 @@ for g_ang in angles_gallery:
                         cl1.append(cl[number2][number21])
                         # print("cl[number21][number2]: ",cl[number21][number2])
                         pb1.append(pb[number2][number21])
-                        # print("pb[number21][number2]: ",pb[number21][number2])
-                    # print("cl1:",cl1)
-                    # print("pb1:",pb1)
+                        
                     tcl = finalClass(cl1,pb1,posesNumber)
                     # print("tcl:",tcl)
                     predy1.append(tcl)
-                    print("predy1:",predy1)
+                    # print("predy1:",predy1)
                 predy.append(predy1)  
 
-        count1 = 0
-        for num in range(0,len(testy)):
-            if testy[num] == predy[num][0]:
-                count1 = count1+1
-        result[ix][iy] = (float(count1)/float(len(predy)))*100
-        iy += 1
-        if iy==11:
-            iy = 0
-        print('Accuracy: ', (float(count1)/float(len(predy)))*100, '%')
-        print('Prob angle: ', p_ang)
-        print('Gallary angle: ', g_ang)
-        print('for nm to nm condition or case')
-    ix += 1
-print(result)
-print(np.mean(result))
-print(np.mean(result, axis=0))
-np.savetxt("/content/drive/MyDrive/Ganesh/VTGAN/generated/view_analysis_for_nm2nm.csv", result)
+        for number21 in range(0,rank):
+            count1 = 0
+            for num1 in range(0,len(testy)):
+                k=0
+                for num2 in range(0,number21+1):
+                    if k==0:
+                        if testy[num1] == predy[num1][num2]:
+                            count1 = count1+1
+                            k=1
+                            break
+            print("Accuracy of Rank",str(number21+1),": ",(float(count1)/float(len(predy)))*100) 
+            print('Prob angle: ', p_ang)
+            print('Gallary angle: ', g_ang)
+            print('for nm to nm condition or case')  
+#         result[ix][iy] = 
+#         iy += 1
+#         if iy==11:
+#             iy = 0
+#         print('Accuracy: ', (float(count1)/float(len(predy)))*100, '%')
+        
+#     ix += 1
+# print(result)
+# print(np.mean(result))
+# print(np.mean(result, axis=0))
+# np.savetxt("/content/drive/MyDrive/Ganesh/VTGAN/generated/view_analysis_for_nm2nm.csv", result)
