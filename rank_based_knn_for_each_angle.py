@@ -35,21 +35,27 @@ result = np.zeros((rank, 11))
 # angles_gallery = ['000', '018', '036', '054', '072', '090', '108', '126', '144', '162', '180']
 angles_gallery = ['090']
 angles_probe = angles_gallery
-path1 = '/content/drive/MyDrive/Ganesh/VTGAN/generated/200000/imgs/'
+path1 = '/DATA/sanjay/GaitGANResNet/'
 ix = 0
 iy = 0
+sub1 = ''
 for g_ang in angles_gallery:
     path2 = path1 + g_ang + '/'
-    print(path2)
+    #print("path2", path2)
     subjects = os.listdir(path2)
     subjectsNumber = len(subjects)
     print(subjectsNumber)
     X = []
     y = []
-    pid = 0
+    pid = 63
     for number1 in range(pid,subjectsNumber):
-        path3 = path2 + subjects[number1] + '/'
-        print("train with subject:",str(62+number1))
+        if number1<100:
+            sub1 = '0' + str(number1)
+        else:
+            sub1 = str(number1)
+        path3 = path2 + sub1 + '/'
+        #print("path3", path3)
+        #print("train with subject:",str(number1))
         for sequence in ['nm-01', 'nm-02', 'nm-03', 'nm-04']:
             path4 = path3 + sequence + '/' + g_ang + '/'
             poses = os.listdir(path4)
@@ -93,8 +99,12 @@ for g_ang in angles_gallery:
         testy = []
         predy = []
         for number1 in range(pid,subjectsNumber):#
-            path3 = path2 + subjects[number1] + '/'
-            print("test with subject:",str(62+number1))
+            if number1<100:
+                sub1 = '0' + str(number1)
+            else:
+                sub1 = str(number1)
+            path3 = path2 + sub1 + '/'
+            #print("test with subject:",str(number1))
             for sequence in ['nm-05', 'nm-06']:
                 path4 = path3 + sequence + '/' + p_ang + '/'
                 poses = os.listdir(path4)
@@ -160,6 +170,10 @@ for g_ang in angles_gallery:
             print('Gallary angle: ', g_ang)
             print('for nm to nm condition or case')  
             result[number21][iy] = (float(count1)/float(len(predy)))*100
+        print('--------------------------------------------------------------')  
+        print('--------------------------------------------------------------')  
+        print('--------------------------------------------------------------')  
+        #print('--------------------------------------------------------------')  
         iy += 1
         if iy==11:
             iy = 0
@@ -169,4 +183,4 @@ for g_ang in angles_gallery:
 print(result)
 # print(np.mean(result))
 # print(np.mean(result, axis=0))
-np.savetxt("/content/drive/MyDrive/Ganesh/VTGAN/generated/view_analysis_for_nm2nm_for_20_ranks.csv", result)
+np.savetxt("/DATA/sanjay/GaitGANResNet/view_analysis_for_nm2nm_for_20_ranks.csv", result)
